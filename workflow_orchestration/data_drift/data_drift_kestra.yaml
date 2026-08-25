@@ -1,0 +1,65 @@
+id: detect-data-drift
+namespace: dev
+tasks:
+  - id: getReferenceTable
+    type: io.kestra.plugin.jdbc.postgresql.CopyOut
+    url: jdbc:postgresql://host.docker.internal:5432/
+    username: "{{ secret('POSTGRES_USERNAME') }}"
+    password: "{{ secret('POSTGRES_PASSWORD') }}"
+    format: CSV
+    sql: SELECT * FROM reference
+    header: true
+
+  - id: wdir
+    type: io.kestra.core.tasks.flows.WorkingDirectory
+    tasks:
+      - id: cloneRepository
+        type: io.kestra.plugin.git.Clone
+        url: https://github.com/khuyentran1401/detect-data-drift-pipeline
+        branch: main
+
+      - id: saveReferenceToCSV
+        type: io.kestra.core.tasks.storages.LocalFiles
+        inputs:
+          data/reference.csv: "{{ outputs.getReferenceTable.uri }}"
+
+      - id: saveCurrentCSV
+        type: io.kestra.plugin.scripts.python.Script
+        beforeCommands:
+          - pip install pandas
+        script: |
+          import pandas as pd
+          data_url = "{{inputs.data_url}}"
+          start_date = "{{inputs.startDate}}"
+          end_date = "{{inputs.endDate}}"
+
+          df = pd.read_csv(data_url, parse_dates=['dteday'])
+          print(f"Getting data from {start_date} to {end_date}")
+          df = df.loc[df.dteday.between(start_date, end_date)]
+          df.to_csv("data/current.csv", index=False)
+
+      - id: detectDataDrift
+        type: io.kestra.plugin.scripts.python.Commands
+        beforeCommands:
+          - pip install -r src/detect/requirements.txt
+        commands:
+          - python src/detect/detect_data_drift.py
+      - id: saveFilesInStorage
+        type: io.kestra.core.tasks.storage.LocalFiles
+        outputs:
+          - data/current.csv
+
+  - id: saveTodCurrentTable
+    type: io.kestra.plugin.jdbc.postgresql.CopyIn
+    username: "{{secret('POSTGRES_USERNAME')}}"
+    password: "{{secret('POSTGRES_PASSWORD')}}"
+    from: "{{outputs.saveFilesInStorage.uris['data/current.csv']}}"
+    table: current
+    format: CSV
+    header: true
+    delimiter: ","
+
+triggers:
+    - id: schedule
+      type: io.kestra.core.models.triggers.types.Schedule
+      cron: "0 11 * * MON"
