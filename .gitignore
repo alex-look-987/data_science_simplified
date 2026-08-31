@@ -12,3 +12,4 @@ wheels/
 
 # Storage Files
 *.csv
+/data
