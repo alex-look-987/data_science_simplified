@@ -34,7 +34,7 @@ def simulate_data_drift(df: pd.DataFrame, config: DictConfig) -> pd.DataFrame:
 
     shift = np.random.uniform(-config.market_noise.drift_factor, config.market_noise.drift_factor)
 
-    return df * (1 + shift)
+    return df * (2 + shift)
 
 def save_processed_data(df: pd.DataFrame, config: DictConfig):
     create_parent_directory(config.processed.path)
