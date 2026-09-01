@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from helper import load_config
+from helper import load_config, create_parent_directory
 from omegaconf import DictConfig
 
 def read_data(config: DictConfig):
@@ -36,6 +36,10 @@ def simulate_data_drift(df: pd.DataFrame, config: DictConfig) -> pd.DataFrame:
 
     return df * (1 + shift)
 
+def save_processed_data(df: pd.DataFrame, config: DictConfig):
+    create_parent_directory(config.processed.path)
+    df.to_csv(config.processed.path, index=False)
+
 def processed_market_noise():
     config = load_config()
 
@@ -43,6 +47,8 @@ def processed_market_noise():
 
     df = simulate_gaussian_noise(df, config)
     df = simulate_data_drift(df, config)
+
+    save_processed_data(df, config)
 
 if __name__ == "__main__":
     processed_market_noise()

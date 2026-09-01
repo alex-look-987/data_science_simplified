@@ -1,3 +1,4 @@
+from pathlib import Path
 from hydra import compose, initialize
 
 def load_config():
@@ -8,3 +9,6 @@ def load_config():
 
     return config
 
+def create_parent_directory(path: str):
+    parent_dir = Path(path).parent
+    parent_dir.mkdir(exist_ok=True)
