@@ -1,0 +1,45 @@
+name: Run code
+on:
+  push:
+    branches:
+      - dvc-pipeline
+    paths:
+      - config/**
+      - src/**
+      - data/**
+      - .github/workflows/run_pipeline.yaml
+
+jobs:
+  run_code:
+    name: Run code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the current repository
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Pull data from DVC
+        run: |
+          uv rundvc remote modify origin --local auth basic
+          uv rundvc remote modify origin --local user ${{ secrets.DAGSHUB_USERNAME }}
+          uv rundvc remote modify origin --local password ${{ secrets.DAGSHUB_TOKEN }}
+          uv rundvc pull
+
+      - name: Run the pipeline with DVC
+        run: uv rundvc repro
+
+      - name: Push the outcome to DVC remote storage
+        run: uv rundvc push
+
+      - name: Commit changes in dvc.lock
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: actualizar dvc.lock through automated pipeline "
+          branch: dvc-pipeline
+          file_pattern: dvc.lock
