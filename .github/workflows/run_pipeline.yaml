@@ -2,7 +2,7 @@ name: Run code
 on:
   push:
     branches:
-      - dvc-pipeline
+      - main
     paths:
       - config/**
       - src/**
