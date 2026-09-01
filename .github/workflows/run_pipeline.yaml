@@ -26,20 +26,20 @@ jobs:
 
       - name: Pull data from DVC
         run: |
-          uv rundvc remote modify origin --local auth basic
-          uv rundvc remote modify origin --local user ${{ secrets.DAGSHUB_USERNAME }}
-          uv rundvc remote modify origin --local password ${{ secrets.DAGSHUB_TOKEN }}
-          uv rundvc pull
+          uv run dvc remote modify origin --local auth basic
+          uv run dvc remote modify origin --local user ${{ secrets.DAGSHUB_USERNAME }}
+          uv run dvc remote modify origin --local password ${{ secrets.DAGSHUB_TOKEN }}
+          uv run dvc pull
 
       - name: Run the pipeline with DVC
-        run: uv rundvc repro
+        run: uv run dvc repro
 
       - name: Push the outcome to DVC remote storage
-        run: uv rundvc push
+        run: uv run dvc push
 
       - name: Commit changes in dvc.lock
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "chore: actualizar dvc.lock through automated pipeline "
-          branch: dvc-pipeline
+          commit_message: "chore: actualizar dvc.lock through automated pipeline [skip ci]"
+          branch: main
           file_pattern: dvc.lock
