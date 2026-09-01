@@ -9,6 +9,9 @@ on:
       - data/**
       - .github/workflows/run_pipeline.yaml
 
+permissions:
+  contents: write
+
 jobs:
   run_code:
     name: Run code
