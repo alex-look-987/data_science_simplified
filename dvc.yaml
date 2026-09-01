@@ -1,0 +1,20 @@
+stages:
+  process_data:
+    cmd: uv run src/process_data.py
+    deps:
+      - src/process_data.py
+      - src/helper.py
+      - data/raw/stock_data.csv
+      - config/main.yaml
+    outs:
+      - data/interim
+  
+  simulation:
+    cmd: uv run src/market_noise.py
+    deps:
+      - src/helper.py
+      - src/market_noise.py
+      - data/interim
+      - config/main.yaml
+    outs:
+      - data/processed
