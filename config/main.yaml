@@ -1,0 +1,22 @@
+hydra:
+  output_subdir: null
+  run:
+    dir: .
+
+raw_data:
+  path: data/raw/stock_data.csv
+
+interim:
+  dir: data/interim
+  name: feature_engineering.csv
+  path: ${interim.dir}/${interim.name}
+
+processed:
+  dir: data/processed
+  name: market_noise_simulation.csv
+  path: ${processed.dir}/${processed.name}
+
+market_noise:
+  loc: 0
+  scale: 0.01
+  drift_factor: 0.05
