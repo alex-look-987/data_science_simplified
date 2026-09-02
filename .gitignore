@@ -13,4 +13,5 @@ wheels/
 # Storage Files
 *.csv
 /raw
+/interim
 /processed
