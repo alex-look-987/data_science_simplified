@@ -5,49 +5,49 @@ stages:
     deps:
     - path: config/main.yaml
       hash: md5
-      md5: ea3ce258db9762b976890093edb1b0e8
-      size: 383
+      md5: b8e61ed5f5b34e354a087d235c976e50
+      size: 362
     - path: data/raw/stock_data.csv
       hash: md5
       md5: 662c4954c8cc80b3a00609662a6f5d99
       size: 1019
     - path: src/helper.py
       hash: md5
-      md5: 7c3299147e975c15225b803ca8ade36a
-      size: 416
+      md5: 654a1a60ab355506964df8c11a4f8620
+      size: 403
     - path: src/process_data.py
       hash: md5
-      md5: d29dd134637e0d61b41dd4d3e3084fdf
-      size: 715
+      md5: b6ba834637d277c44009f44727d05bcd
+      size: 691
     outs:
     - path: data/interim
       hash: md5
-      md5: 51797b3c0bb6b506a936b5416f1dfea1.dir
-      size: 1249
+      md5: ed74e7600b1b4a14b28e205dde76f4fa.dir
+      size: 1225
       nfiles: 1
   simulation:
     cmd: uv run src/market_noise.py
     deps:
     - path: config/main.yaml
       hash: md5
-      md5: ea3ce258db9762b976890093edb1b0e8
-      size: 383
+      md5: b8e61ed5f5b34e354a087d235c976e50
+      size: 362
     - path: data/interim
       hash: md5
-      md5: 51797b3c0bb6b506a936b5416f1dfea1.dir
-      size: 1249
+      md5: ed74e7600b1b4a14b28e205dde76f4fa.dir
+      size: 1225
       nfiles: 1
     - path: src/helper.py
       hash: md5
-      md5: 7c3299147e975c15225b803ca8ade36a
-      size: 416
+      md5: 654a1a60ab355506964df8c11a4f8620
+      size: 403
     - path: src/market_noise.py
       hash: md5
-      md5: 754456675724a29926ece6b700755d10
-      size: 1533
+      md5: 71d9adeee7e1405378e9f4f84f0ed283
+      size: 1480
     outs:
     - path: data/processed
       hash: md5
-      md5: fbeb837ab9db54a6aefbe91fc8923ef0.dir
-      size: 2251
+      md5: c96c79330bcfc7e81d17f45ef1afefba.dir
+      size: 2237
       nfiles: 1
