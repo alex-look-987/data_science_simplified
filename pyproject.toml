@@ -28,6 +28,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "ipykernel>=7.3.0",
+    "ruff>=0.16.6",
 ]
 
 [tool.black]
