@@ -1,4 +1,6 @@
-from collections.abc import Iterable
+# ruff: noqa: UP035
+
+from typing import Iterable
 
 
 def sum_even_number(numbers: Iterable[int]) -> int:

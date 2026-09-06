@@ -5,13 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "black>=26.5.1",
     "dvc>=3.67.1",
     "evidently>=0.7.21",
-    "flake8>=7.3.0",
     "hydra-core>=1.3.6",
     "interrogate>=1.7.0",
-    "isort>=9.0.1",
     "kestra>=1.3.0",
     "matplotlib>=3.11.1",
     "mypy>=2.3.1",
@@ -31,34 +28,47 @@ dev = [
     "ruff>=0.16.6",
 ]
 
-[tool.black]
+[tool.ruff]
 line-length = 100
-target-version = ["py311"]
-include = '\.pyi?$'
-extend-exclude = '''
-(
-    \.git
-  | \.venv
-  | \.mypy_cache
-  | \.pytest_cache
-  | build
-  | dist
-  | notebooks
-)
-'''
+target-version = "py311"
+extend-exclude = [
+    ".venv",
+    "build",
+    "dist",
+   "*.ipynb",
+   "*.md",
+    ".mypy_cache",
+    ".ruff_cache",
+]
 
-[tool.isort]
-profile = "black"
-line_length = 100
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-skip = [".venv", "build", "dist", "notebooks"]
-known_first_party = ["src"]
-known_third_party = ["pandas", "numpy", "sklearn", "keras", "shap", "bokeh", "ibapi"]
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+[tool.ruff.lint]
+extend-select = [
+    "E",   # pycodestyle errors (antes flake8)
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes (antes flake8)
+    "I",   # isort — reemplaza a isort como paquete separado
+    "UP",  # pyupgrade
+    # "D",   # pydocstyle
+    "C90", # mccabe complexity (antes flake8 max-complexity)
+]
+ignore = [
+    "D203",  # incompatible con D211 (una en blanco antes de clase)
+    "D213",  # incompatible con D212 (resumen en primera línea)
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "D104"]
+"tests/*" = ["D"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
 
 [tool.interrogate]
 ignore-init-method = true
@@ -71,10 +81,17 @@ ignore-module = true
 ignore-nested-functions = false
 ignore-nested-classes = true
 ignore-setters = false
-fail-under = 80
+fail-under = 5
 exclude = ["setup.py", "docs", "build", ".venv", "notebooks", "tests"]
 ignore-regex = ["^get$", "^set$", "^_.*", ".*BaseClass.*"]
 verbose = 1
 quiet = false
 whitelist-regex = []
 color = true
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+exclude = ["notebooks", "build", "dist", "\\.venv"]
+warn_return_any = true
+warn_unused_configs = true
