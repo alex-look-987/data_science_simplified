@@ -6,6 +6,14 @@ from helper import create_parent_directory, load_config
 
 
 def read_data(config: DictConfig):
+    """_summary_
+
+    Args:
+        config (DictConfig): _description_
+
+    Returns:
+        _type_: _description_
+    """    
     return pd.read_csv(config.interim.path)
 
 
@@ -46,11 +54,21 @@ def simulate_data_drift(df: pd.DataFrame, config: DictConfig) -> pd.DataFrame:
 
 
 def save_processed_data(df: pd.DataFrame, config: DictConfig):
+    """_summary_
+
+    Args:
+        df (pd.DataFrame): _description_
+        config (DictConfig): _description_
+    """
+    
     create_parent_directory(config.processed.path)
     df.to_csv(config.processed.path, index=False)
 
 
 def processed_market_noise():
+    """_summary_
+    """
+
     config = load_config()
 
     df = read_data(config)
