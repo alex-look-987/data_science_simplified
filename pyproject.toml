@@ -28,3 +28,14 @@ dev = [
 
 [tool.black]
 target-version = ["py311"]
+include = '\.pyi?$'
+extend-exclude = '''
+^/
+(
+  | \.git          # Ignore git directories
+  | \.venv         # Ignore virtual environments
+  | build          # Ignore build artifacts
+  | dist           # Ignore distribution packages
+  | \.mympy_cache 
+)
+'''
