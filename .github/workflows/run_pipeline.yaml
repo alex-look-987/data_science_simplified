@@ -2,7 +2,7 @@ name: Run code
 on:
   push:
     branches:
-      - main
+      - data-pipeline
     paths:
       - config/**
       - src/**
