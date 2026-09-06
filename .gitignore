@@ -9,6 +9,9 @@ wheels/
 # Virtual environments
 .venv
 
+# formating and linting cache
+/.mypy_cache
+/.ruff_cache
 
 # Storage Files
 *.csv
