@@ -13,7 +13,7 @@ def read_data(config: DictConfig):
 
     Returns:
         _type_: _description_
-    """    
+    """
     return pd.read_csv(config.interim.path)
 
 
@@ -29,7 +29,9 @@ def simulate_gaussian_noise(df: pd.DataFrame, config: DictConfig) -> pd.DataFram
     """
 
     noise = np.random.normal(
-        config.market_noise.loc, config.market_noise.scale, size=df.shape
+        config.market_noise.loc,
+        config.market_noise.scale,
+        size=df.shape,
     )
 
     return df + noise
@@ -47,10 +49,11 @@ def simulate_data_drift(df: pd.DataFrame, config: DictConfig) -> pd.DataFrame:
     """
 
     shift = np.random.uniform(
-        -config.market_noise.drift_factor, config.market_noise.drift_factor
+        -config.market_noise.drift_factor,
+        config.market_noise.drift_factor,
     )
 
-    return df * (1 + shift)
+    return pd.DataFrame(df * (1 + shift))
 
 
 def save_processed_data(df: pd.DataFrame, config: DictConfig):
@@ -60,14 +63,13 @@ def save_processed_data(df: pd.DataFrame, config: DictConfig):
         df (pd.DataFrame): _description_
         config (DictConfig): _description_
     """
-    
+
     create_parent_directory(config.processed.path)
     df.to_csv(config.processed.path, index=False)
 
 
 def processed_market_noise():
-    """_summary_
-    """
+    """_summary_"""
 
     config = load_config()
 
